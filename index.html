@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ur" dir="rtl">
 <head>
@@ -158,15 +159,15 @@ footer{background:#112F35;color:#d9e6e4;padding:50px 0 20px}.footgrid{display:gr
 
 <section>
  <div class="container">
-  <div class="sectionHead"><span class="kicker">مسئلہ بھیجیں</span><h2>اپنا مسئلہ ہمیں بتائیں</h2><p>یہ فارم نمونہ ہے۔ مکمل آن لائن submission کے لیے اسے Google Form یا کسی backend سے جوڑیں۔</p></div>
-  <form class="issueForm" onsubmit="event.preventDefault(); alert('یہ ڈیمو فارم ہے۔ براہِ کرم فی الحال WhatsApp بٹن استعمال کریں۔');">
-   <div class="field"><label>نام</label><input placeholder="اپنا نام"></div>
-   <div class="field"><label>موبائل / WhatsApp</label><input placeholder="03xx-xxxxxxx"></div>
-   <div class="field"><label>گاؤں / علاقہ</label><input placeholder="مثلاً میلسی"></div>
-   <div class="field"><label>مسئلے کی قسم</label><select><option>منتخب کریں</option><option>پانی و سیوریج</option><option>سڑک و راستہ</option><option>صحت</option><option>تعلیم</option><option>بجلی</option><option>زراعت</option><option>دیگر</option></select></div>
-   <div class="field full"><label>مسئلے کی مکمل تفصیل</label><textarea placeholder="مسئلہ، مقام، مدت اور متعلقہ معلومات لکھیں..."></textarea></div>
-   <div class="field full"><div class="notice">اہم: شناختی کارڈ نمبر، بینک معلومات، پاس ورڈ یا دیگر غیر ضروری حساس معلومات یہاں درج نہ کریں۔</div></div>
-   <div class="field full"><button class="btn primary" type="submit">مسئلہ جمع کریں</button></div>
+  <div class="sectionHead"><span class="kicker">مسئلہ بھیجیں</span><h2>اپنا مسئلہ ہمیں بتائیں</h2><p>فارم مکمل کریں اور "مسئلہ WhatsApp پر بھیجیں" پر کلک کریں۔ آپ کی فراہم کردہ معلومات WhatsApp میں خودکار طور پر پیغام کی شکل میں آ جائیں گی؛ پھر آپ صرف Send دبائیں۔</p></div>
+  <form class="issueForm" onsubmit="sendIssueToWhatsApp(event)">
+   <div class="field"><label for="issueName">نام</label><input id="issueName" name="name" placeholder="اپنا نام" required></div>
+   <div class="field"><label for="issuePhone">موبائل / WhatsApp</label><input id="issuePhone" name="phone" placeholder="03xx-xxxxxxx" required></div>
+   <div class="field"><label for="issueArea">گاؤں / علاقہ</label><input id="issueArea" name="area" placeholder="مثلاً میلسی" required></div>
+   <div class="field"><label for="issueType">مسئلے کی قسم</label><select id="issueType" name="type" required><option value="">منتخب کریں</option><option>پانی و سیوریج</option><option>سڑک و راستہ</option><option>صحت</option><option>تعلیم</option><option>بجلی</option><option>زراعت</option><option>مستحق افراد / فلاحی مدد</option><option>دیگر</option></select></div>
+   <div class="field full"><label for="issueDetails">مسئلے کی مکمل تفصیل</label><textarea id="issueDetails" name="details" placeholder="مسئلہ، مقام، مدت اور متعلقہ معلومات لکھیں..." required></textarea></div>
+   <div class="field full"><div class="notice">اہم: شناختی کارڈ نمبر، بینک معلومات، پاس ورڈ یا دیگر غیر ضروری حساس معلومات یہاں درج نہ کریں۔ تصاویر یا ویڈیوز WhatsApp کھلنے کے بعد پیغام کے ساتھ الگ سے attach کی جا سکتی ہیں۔</div></div>
+   <div class="field full"><button class="btn primary" type="submit">📲 مسئلہ WhatsApp پر بھیجیں</button></div>
   </form>
  </div>
 </section>
@@ -216,5 +217,38 @@ footer{background:#112F35;color:#d9e6e4;padding:50px 0 20px}.footgrid{display:gr
  <p>Facebook، WhatsApp اور دیگر third-party platforms اپنی الگ privacy policies اور terms رکھتے ہیں۔</p>
  <p>Privacy سے متعلق رابطے کے لیے WhatsApp: <b>0370-6315711</b></p>
 </div>
+
+<script>
+function sendIssueToWhatsApp(event) {
+  event.preventDefault();
+
+  const name = document.getElementById('issueName').value.trim();
+  const phone = document.getElementById('issuePhone').value.trim();
+  const area = document.getElementById('issueArea').value.trim();
+  const type = document.getElementById('issueType').value;
+  const details = document.getElementById('issueDetails').value.trim();
+
+  if (!name || !phone || !area || !type || !details) {
+    alert('براہِ کرم تمام ضروری معلومات مکمل کریں۔');
+    return;
+  }
+
+  const message =
+`📢 عوامی آواز میلسی — عوامی مسئلہ
+
+👤 نام: ${name}
+📱 موبائل / WhatsApp: ${phone}
+📍 گاؤں / علاقہ: ${area}
+🗂️ مسئلے کی قسم: ${type}
+
+📝 مسئلے کی تفصیل:
+${details}
+
+میں نے یہ معلومات عوامی آواز میلسی کو مسئلے کے جائزے اور متعلقہ ادارے تک پہنچانے کے لیے بھیجی ہیں۔`;
+
+  const whatsappUrl = 'https://wa.me/923706315711?text=' + encodeURIComponent(message);
+  window.open(whatsappUrl, '_blank');
+}
+</script>
 </body>
 </html>
